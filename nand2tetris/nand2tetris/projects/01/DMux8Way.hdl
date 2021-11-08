@@ -16,5 +16,18 @@ CHIP DMux8Way {
     OUT a, b, c, d, e, f, g, h;
 
     PARTS:
-    // Put your code here:
+    // if > 3 (100) then greaterThan3 = 1
+    And(a=sel[2], b=in, out=greaterThan3);
+    // if not greaterThan3 then notGreaterThan3 = 1
+    Not(in=greaterThan3, out=notGreaterThan3);
+    // prepares a temp, if sel < 4 then t0 = in
+    And(a=in, b=notGreaterThan3, out=t0);
+    // prepares a temp, if sel >= 4 then t1 = in
+    And(a=in, b=greaterThan3, out=t1);
+    // Use input as the temp when sel < 4
+    DMux4Way(in=t0, sel=sel[0..1], a=a, b=b, c=c, d=d);
+    // Use input as the temp when sel >= 4
+    // sel[0..1] and not sel[1..2], because you already used sel[2] to make temp 1
+    // and now you want to see 100 => e, 101 => f, 110 => g, 111 => h, notice than sel[2] is always 1
+    DMux4Way(in=t1, sel=sel[0..1], a=e, b=f, c=g, d=h);
 }
