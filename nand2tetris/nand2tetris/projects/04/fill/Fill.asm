@@ -10,5 +10,42 @@
 // When no key is pressed, the program clears the screen, i.e. writes
 // "white" in every pixel;
 // the screen should remain fully clear as long as no key is pressed.
+(loop)
+@SCREEN
+D=A
+@address // Saves the address from screen (16384)
+M=D 
 
-// Put your code here.
+@8192
+D=A
+@pixels
+M=D
+
+(screen_loop)
+    @KBD
+    D=M
+    @if_black
+    D;JGT
+    D=0 // else
+    (end_if_black)
+    @address // load screen memory
+    A=M
+    M=D
+
+    @address //set the next screen memory 
+    M=M+1
+
+    @pixels
+    M=M-1
+    D=M
+    @screen_loop
+    D, JGT
+
+@loop
+0, JMP
+
+(if_black)
+    @color
+    D=-1
+    @end_if_black
+    0;JMP
