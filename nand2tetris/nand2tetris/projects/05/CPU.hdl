@@ -37,7 +37,30 @@ CHIP CPU {
         writeM,          // Write to M? 
         addressM[15],    // Address in data memory (of M)
         pc[15];          // address of next instruction
-
     PARTS:
-    // Put your code here:
+    // Information
+    // [1]11a cccc ccdd djjj => C instruction, [0]vvv vvvv vvvv vvvv => A instruction
+    // i  _  _  a  c1 c2 c3 c4 c5 c6 d1 d2 d3 j1 j2 j3
+    // 15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00
+    // j1 == 1 => out < 0
+    // j2 == 1 => out == 0
+    // j3 == 1 => out > 0
+    // d1 == 1 => A is part of destination
+    // d2 == 1 => D is part of destination
+    // d3 == 1 => M is part of destination
+    // details about a c[1..6]  is in the image in the folder
+
+    // A Instruction - [0]??? ???? ???? ???? => ? {0, 1}
+
+    // C Instruction - [1]11a cccc ccdd djjj
+
+    // Alu
+    // zx, zero the x input?
+    // nx, negate the x input?
+    // zy, zero the y input?
+    // ny, negate the y input?
+    // f,  compute out = x + y (if 1) or x & y (if 0)
+    // no; negate the out output?
+    
+    // PC
 }
