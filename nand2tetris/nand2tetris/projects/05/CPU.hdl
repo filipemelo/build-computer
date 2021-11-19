@@ -40,6 +40,8 @@ CHIP CPU {
     PARTS:
     // Information
     // [1]11a cccc ccdd djjj => C instruction, [0]vvv vvvv vvvv vvvv => A instruction
+    // A Instruction - [0]??? ???? ???? ???? => ? {0, 1}
+    // C Instruction - [1]11[a] cccc ccdd djjj
     // i  _  _  a  c1 c2 c3 c4 c5 c6 d1 d2 d3 j1 j2 j3
     // 15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00
     // j1 == 1 => out < 0
@@ -49,10 +51,24 @@ CHIP CPU {
     // d2 == 1 => D is part of destination
     // d3 == 1 => M is part of destination
     // details about a c[1..6]  is in the image in the folder
+    Not(in=instruction[15], out=isA);
+    Not(in=isA, out=isC);
+    
+    Mux16(a=aluOut, b=instruction, sel=isA, out=muxAOut);
+    // A is setted when is an A instruction OR d1 ==1 (dest is A, saving in A)
+    Or(a=instruction[05], b=isA, out=loadA);
+    ARegister(in=muxAOut, load=loadA, out=registerAOut, out[0..14]=addressM);
 
-    // A Instruction - [0]??? ???? ???? ???? => ? {0, 1}
+    // D is setted when d2 == 1 (dest is D, saving in D), and is a C instruction
+    And(a=instruction[04], b=isC, out=loadD);
+    DRegister(in=aluOut, load=loadD, out=registerDOut);
+    
+    // C - instruction[12] - a == 1 compute M else compute A
+    And(a=isC, b=instruction[12], out=loadM);
+    Mux16(a=registerAOut, b=inM, sel=loadM, out=muxAMOut);
 
-    // C Instruction - [1]11a cccc ccdd djjj
+    // writeM? when is C instruction and d3 == 1
+    And(a=isC, b=instruction[03], out=writeM);
 
     // Alu
     // zx, zero the x input?
@@ -61,6 +77,26 @@ CHIP CPU {
     // ny, negate the y input?
     // f,  compute out = x + y (if 1) or x & y (if 0)
     // no; negate the out output?
-    
+    ALU(x=registerDOut, y=muxAMOut, 
+        zx=instruction[11], nx=instruction[10], 
+        zy=instruction[9], ny=instruction[8], 
+        f=instruction[7], no=instruction[6], 
+        out=outM, out=aluOut, 
+        zr=zr, ng=ng);
+
+    // Jump
+    Or(a=zr, b=ng, out=zrOrNg); // out <= 0
+    Not(in=zrOrNg, out=pv); // out > 0
+
+    And(a=instruction[0], b=pv, out=jmpJ3);
+    And(a=instruction[1], b=zr, out=jmpJ2);
+    And(a=instruction[2], b=ng, out=jmpJ1);
+    Or(a=jmpJ3, b=jmpJ2, out=condJmp0);
+    Or(a=condJmp0, b=jmpJ1, out=condJmp1);
+    And(a=condJmp1, b=isC, out=thenJump);
+    Not(in=thenJump, out=thenInc);
+
     // PC
+    PC(in=registerAOut, load=thenJump, inc=thenInc, reset=reset, out[0..14]=pc);
+
 }
