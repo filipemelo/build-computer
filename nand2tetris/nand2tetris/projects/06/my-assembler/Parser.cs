@@ -1,7 +1,7 @@
 using my_assembler.Models;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("my_assembler_test")]
+[assembly: InternalsVisibleTo("my-assembler-test")]
 namespace my_assembler
 {
     internal class Parser
@@ -34,8 +34,10 @@ namespace my_assembler
                         break;
                     }
                     foundSlash = true;
+                } else 
+                {
+                    indexOfComment++;
                 }
-                indexOfComment++;
             }
             return lineNoSpace.Remove(indexOfComment);
         }
@@ -104,7 +106,9 @@ namespace my_assembler
         {
             var instructionA = new InstructionA();
             var isNumber = int.TryParse(line.Substring(1), out int intValue);
-            var fieldsA = new FieldsA(isNumber, intValue, line.Substring(1));
+            string? variableName = isNumber ? (string?)null : line.Substring(1);
+            int? intValueNullable = isNumber ? intValue : (int?)null;
+            var fieldsA = new FieldsA(isNumber, intValueNullable, variableName);
             if (!isNumber)
             {
                 symbolTable.AddNamedVariable(line.Substring(1));

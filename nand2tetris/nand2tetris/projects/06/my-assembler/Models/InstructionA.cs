@@ -1,3 +1,6 @@
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("my-assembler-test")]
 namespace my_assembler.Models
 {
     internal class InstructionA : Instruction

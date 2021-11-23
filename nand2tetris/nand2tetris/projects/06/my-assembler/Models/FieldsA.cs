@@ -1,8 +1,11 @@
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("my-assembler-test")]
 namespace my_assembler.Models
 {
     internal class FieldsA : Fields
     {
-        public FieldsA(bool isNumber, int intValue, string variableName)
+        public FieldsA(bool isNumber, int? intValue, string? variableName)
         {
             IsNumber = isNumber;
             IntValue = intValue;
