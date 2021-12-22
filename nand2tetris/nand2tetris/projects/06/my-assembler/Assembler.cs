@@ -19,8 +19,8 @@ namespace my_assembler
         }
 
         internal void Process(string[] lines){
-            var fields = _parser.UnpackInstruction(lines, ref _symbolTable);
-            var binaryText = _code.Translate(fields, _symbolTable);
+            var instructions = _parser.UnpackInstruction(lines, ref _symbolTable);
+            var binaryText = _code.Translate(instructions, _symbolTable);
             _machineCode.Save(binaryText);
         }
     }

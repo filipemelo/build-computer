@@ -2,9 +2,9 @@ namespace my_assembler
 {
     internal class MachineCode
     {
-        internal void Save(object binaryText)
+        internal void Save(string binaryText)
         {
-            throw new NotImplementedException();
+            File.WriteAllText("machinecode.txt", binaryText);
         }
     }
 }

@@ -4,5 +4,6 @@ namespace my_assembler.Models
     {
         Fields? GetFields();
         void SetFields(Fields field);
+        string GetMachineCode(SymbolTable symbolTable);
     }
 }

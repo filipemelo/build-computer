@@ -6,19 +6,24 @@ namespace my_assembler
 {
     internal class Parser
     {
-        internal object UnpackInstruction(string[] lines, ref SymbolTable symbolTable)
+        internal List<Instruction> UnpackInstruction(string[] lines, ref SymbolTable symbolTable)
         {
+            var instructions = new List<Instruction>();
             var row = 1;
             foreach (var line in lines)
             {
                 var lineNoComments = RemoveComments(line);
                 var cleanLine = RemoveSpaces(lineNoComments);
                 if (!cleanLine.Any()) continue; // jump to another line and do not process this line, don't even increase row
-                var fields = Analyse(cleanLine, row, ref symbolTable);
-                row++;
+                var instruction = Analyse(cleanLine, row, ref symbolTable);
+                if (instruction != null)
+                {
+                    instructions.Add(instruction);
+                    row++;
+                }
             }
 
-            throw new NotImplementedException();
+            return instructions;
         }
         
         private string RemoveComments(string lineNoSpace)
@@ -77,7 +82,7 @@ namespace my_assembler
             var splitEqual = line.Split('=');
             string? dest = null;
             string analyze = line;
-            if (splitEqual.Length > 0)
+            if (splitEqual.Length > 1)
             {
                 dest = splitEqual[0];
                 analyze = splitEqual[1];
@@ -86,10 +91,10 @@ namespace my_assembler
             var splitSemicolon = analyze.Split(';');
             string? comp = null;
             string? jump = null;
-            if (splitSemicolon.Length > 0)
+            if (splitSemicolon.Length > 1)
             {
                 comp = splitSemicolon[0];
-                jump = splitSemicolon[1];
+                jump = splitSemicolon[1] == "" ? (string?)null : splitSemicolon[1];
             }
             else 
             {
