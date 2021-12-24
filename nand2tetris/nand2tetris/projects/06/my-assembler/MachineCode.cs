@@ -1,10 +1,10 @@
 namespace my_assembler
 {
-    internal class MachineCode
+    public class MachineCode
     {
-        internal void Save(string binaryText)
+        internal void Save(string binaryText, string filename)
         {
-            File.WriteAllText("machinecode.txt", binaryText);
+            File.WriteAllText(filename, binaryText);
         }
     }
 }

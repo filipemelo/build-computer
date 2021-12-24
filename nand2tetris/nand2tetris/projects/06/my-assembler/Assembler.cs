@@ -3,14 +3,14 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("my_assembler_test")]
 namespace my_assembler
 {
-    internal class Assembler
+    public class Assembler
     {
         private readonly Parser _parser;
         private readonly Code _code;
         private SymbolTable _symbolTable;
         private readonly MachineCode _machineCode;
 
-        internal Assembler(Parser parser, Code code, SymbolTable symbolTable, MachineCode machineCode)
+        public Assembler(Parser parser, Code code, SymbolTable symbolTable, MachineCode machineCode)
         {
             _parser = parser;
             _code = code;
@@ -18,10 +18,11 @@ namespace my_assembler
             _machineCode = machineCode;
         }
 
-        internal void Process(string[] lines){
+        internal void Process(string[] lines, string filename){
             var instructions = _parser.UnpackInstruction(lines, ref _symbolTable);
+            _symbolTable.CompileSymbolTable();
             var binaryText = _code.Translate(instructions, _symbolTable);
-            _machineCode.Save(binaryText);
+            _machineCode.Save(binaryText, filename);
         }
     }
 }

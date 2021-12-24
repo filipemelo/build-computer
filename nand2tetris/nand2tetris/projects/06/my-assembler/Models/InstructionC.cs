@@ -5,7 +5,7 @@ namespace my_assembler.Models
         private Fields? _fields;
         private Dictionary<string, string> _dest = new Dictionary<string, string>() 
         {
-            { null,     "000" },
+            { "",       "000" },
             { "M",      "001" },
             { "D",      "010" },
             { "DM",     "011" },
@@ -17,7 +17,7 @@ namespace my_assembler.Models
 
         private Dictionary<string, string> _jump = new Dictionary<string, string>() 
         {
-            { null,     "000" },
+            { "",     "000" },
             { "JGT",    "001" },
             { "JEQ",    "010" },
             { "JGE",    "011" },
@@ -111,11 +111,11 @@ namespace my_assembler.Models
             var comp = fieldsC.Comp;
             var jump = fieldsC.Jump;
 
-            var destCode = GetDestCode(dest);
-            var jumpCode = GetJumpCode(jump);
+            var destCode = GetDestCode(dest??"");
+            var jumpCode = GetJumpCode(jump??"");
             var compCode = GetCompCode(comp);
 
-            return $"111{compCode}{destCode}{jumpCode}";
+            return $"111{compCode}{destCode}{jumpCode}\n";
         }
 
         public void SetFields(Fields field)

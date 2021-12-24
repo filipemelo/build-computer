@@ -3,7 +3,7 @@ using my_assembler.Models;
 
 namespace my_assembler
 {
-    internal class Code
+    public class Code
     {
         internal string Translate(List<Instruction> instructions, SymbolTable symbolTable)
         {

@@ -4,12 +4,12 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("my-assembler-test")]
 namespace my_assembler
 {
-    internal class Parser
+    public class Parser
     {
         internal List<Instruction> UnpackInstruction(string[] lines, ref SymbolTable symbolTable)
         {
             var instructions = new List<Instruction>();
-            var row = 1;
+            var row = 0;
             foreach (var line in lines)
             {
                 var lineNoComments = RemoveComments(line);

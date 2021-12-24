@@ -28,14 +28,14 @@ namespace my_assembler.Models
             
             var intValue = fieldsA.IntValue??0;
             var isNumber = fieldsA.IsNumber;
-            var variableName = fieldsA.VariableName;
+            var variableName = fieldsA.VariableName??"";
 
             var binaryValue = Convert.ToString(intValue, 2);
             var variableInt = symbolTable.GetVariableFrom(variableName)??0;
             var variableValue = Convert.ToString(variableInt, 2);
             var value = isNumber ? binaryValue : variableValue;
-
-            return $"0{value}";
+            var value15Bits = value.ToString().PadLeft(15, '0');
+            return $"0{value15Bits}\n";
         }
 
         public void SetFields(Fields field)

@@ -205,8 +205,8 @@ public class ParserTest
 
         instructions.Should().Equals(expectedInstructions);
         
-        symbolTable.GetLabelFrom("Loop").Should().Be(5);
-        symbolTable.GetLabelFrom("End").Should().Be(19);
+        symbolTable.GetLabelFrom("Loop").Should().Be(4);
+        symbolTable.GetLabelFrom("End").Should().Be(18);
 
         symbolTable.GetVariableFrom("i").Should().Be(16);
         symbolTable.GetVariableFrom("sum").Should().Be(17);
