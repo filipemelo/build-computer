@@ -20,7 +20,6 @@ namespace my_assembler
 
         internal void Process(string[] lines, string filename){
             var instructions = _parser.UnpackInstruction(lines, ref _symbolTable);
-            _symbolTable.CompileSymbolTable();
             var binaryText = _code.Translate(instructions, _symbolTable);
             _machineCode.Save(binaryText, filename);
         }

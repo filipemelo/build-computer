@@ -8,11 +8,11 @@ namespace my_assembler.Models
             { "",       "000" },
             { "M",      "001" },
             { "D",      "010" },
-            { "DM",     "011" },
+            { "MD",     "011" },
             { "A",      "100" },
             { "AM",     "101" },
             { "AD",     "110" },
-            { "ADM",    "111" }
+            { "AMD",    "111" }
         };
 
         private Dictionary<string, string> _jump = new Dictionary<string, string>() 
@@ -22,7 +22,7 @@ namespace my_assembler.Models
             { "JEQ",    "010" },
             { "JGE",    "011" },
             { "JLT",    "100" },
-            { "JME",    "101" },
+            { "JNE",    "101" },
             { "JLE",    "110" },
             { "JMP",    "111" }
         };
@@ -45,8 +45,8 @@ namespace my_assembler.Models
             { "A+1",            "0110111" },
             { "M+1",            "1110111" },
             { "D-1",            "0001110" },
-            { "A-1",            "0110111" },
-            { "M-1",            "1110111" },
+            { "A-1",            "0110010" },
+            { "M-1",            "1110010" },
             { "D+A",            "0000010" },
             { "D+M",            "1000010" },
             { "D-A",            "0010011" },

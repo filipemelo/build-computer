@@ -7,9 +7,15 @@ namespace my_assembler
     public class SymbolTable
     {
         private Dictionary<string, int> _variableTable;
+        private List<string> _symbols;
         private Dictionary<string, int> _loopTable;
         private Dictionary<string, int> _specialCases = new Dictionary<string, int>
         {
+            { "SP",     00 },
+            { "LCL",    01 },
+            { "ARG",    02 },
+            { "THIS",   03 },
+            { "THAT",   04 },
             { "R0",     00 },
             { "R1",     01 },
             { "R2",     02 },
@@ -30,29 +36,32 @@ namespace my_assembler
             { "KBD",    24576 } 
         };
         private int _variableNumber;
+        private bool _isCompiled;
         public SymbolTable()
         {
+            _symbols = new List<string>();
             _variableTable = new Dictionary<string, int>();
             _loopTable = new Dictionary<string, int>();
             _variableNumber = 16;
+            _isCompiled = false;
         }
 
-        internal void AddNamedVariable(string variable)
+        internal void AddNamedVariable(string symbol)
         {
-            if (_specialCases.ContainsKey(variable))
+            if (_symbols.Contains(symbol))
                 return;
-            if (_variableTable.ContainsKey(variable))
+            if (_specialCases.ContainsKey(symbol))
                 return;
-            if (_loopTable.ContainsKey(variable))
+            if (_loopTable.ContainsKey(symbol))
                 return;
-            _variableTable.Add(variable, _variableNumber++);
+            _symbols.Add(symbol);
         }
 
         internal void AddLabel(string label, int row)
         {
-            if (_variableTable.ContainsKey(label)) 
+            if (_symbols.Contains(label)) 
             {
-                _variableTable.Remove(label);
+                _symbols.Remove(label);
             }
 
             if (_loopTable.ContainsKey(label)) 
@@ -74,6 +83,7 @@ namespace my_assembler
 
         internal int? GetVariableFrom(string variable)
         {
+            if (!_isCompiled) CompileSymbolTable();
             if (_specialCases.ContainsKey(variable))
                 return _specialCases[variable];
             if (_variableTable.ContainsKey(variable))
@@ -85,14 +95,11 @@ namespace my_assembler
 
         internal void CompileSymbolTable()
         {
-            var initialVariableInt = 16;
-            var compiledVariableTable = new Dictionary<string, int>();
-            foreach (var item in _variableTable)
+            foreach (var item in _symbols)
             {
-                compiledVariableTable.Add(item.Key, initialVariableInt++);
+                _variableTable.Add(item, _variableNumber++);
             }
-            _variableTable = compiledVariableTable;
-            _variableNumber = initialVariableInt;
+            _isCompiled = true;
         }
     }
 }
